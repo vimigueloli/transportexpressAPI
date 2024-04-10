@@ -1,0 +1,22 @@
+{
+  "name": "transportexpressapi",
+  "version": "1.0.0",
+  "description": "api para gestão de uma transportadora, mantendo registro dos, caminhões, motoristas e viagens facilitando a geração de relatorios e folhas de pagamento",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch --env-file .env src/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "prisma": "^5.12.1",
+    "tsx": "^4.7.2",
+    "typescript": "^5.4.4"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.12.1"
+  }
+}
