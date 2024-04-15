@@ -29,6 +29,11 @@ import { createRefuelling } from "./routes/refuellings/post-refuelling";
 import { editRefuelling } from "./routes/refuellings/edit-refuelling";
 import { getRefuelling } from "./routes/refuellings/get-refuelling";
 import { getRefuellings } from "./routes/refuellings/get-refuellings";
+import { createTravel } from "./routes/travels/post-travel";
+import { getTravels } from "./routes/travels/get-travels";
+import { deleteTravel } from "./routes/travels/delete-travel";
+import { editTravel } from "./routes/travels/edit-travel";
+import { getTravel } from "./routes/travels/get-travel";
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -97,6 +102,13 @@ app.register(deleteRefuelling)
 app.register(editRefuelling)
 app.register(getRefuelling)
 app.register(getRefuellings)
+
+// * travel routes * //
+app.register(createTravel)
+app.register(deleteTravel)
+app.register(editTravel)
+app.register(getTravel)
+app.register(getTravels)
 
 
 app.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
