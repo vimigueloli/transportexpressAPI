@@ -6,10 +6,10 @@ import { FastifyInstance } from "fastify"
 export async function createTravel(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .post('/maintenances', {
+    .post('/travels', {
       schema: {
-        summary: 'Registra uma manutenção',
-        tags: ['manutenção'],
+        summary: 'Registra um transporte',
+        tags: ['transporte'],
         body: z.object({
             urban: z.boolean(),
             number: z.string(),

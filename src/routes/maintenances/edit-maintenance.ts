@@ -9,7 +9,7 @@ export async function editMaintenance(app: FastifyInstance) {
     .put('/maintenances/:maintenanceId', {
       schema: {
         summary: 'Edita uma manuteção',
-        tags: ['manuteção'],
+        tags: ['manutenção'],
         params: z.object({
            maintenanceId: z.coerce.number() 
         }),

@@ -9,7 +9,7 @@ export async function getDrivers(app: FastifyInstance) {
     .get('/drivers', {
       schema: {
         summary: 'Lista os motoristas',
-        tags: ['motoristas'],
+        tags: ['motorista'],
         response: {
           200: z.object({
             drivers: z.array(z.object({

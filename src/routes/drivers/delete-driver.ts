@@ -9,7 +9,7 @@ export async function deleteDriver(app: FastifyInstance) {
     .delete('/drivers/:driverId', {
       schema: {
         summary: 'Deleta um motorista',
-        tags: ['motoristas'],
+        tags: ['motorista'],
         params: z.object({
            driverId: z.coerce.number() 
         }),

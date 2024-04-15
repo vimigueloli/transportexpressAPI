@@ -9,7 +9,7 @@ export async function createDriver(app: FastifyInstance) {
     .post('/drivers', {
       schema: {
         summary: 'Registra um motorista',
-        tags: ['motoristas'],
+        tags: ['motorista'],
         body: z.object({
           name: z.string(),
           cpf: z.string().optional(),

@@ -8,8 +8,8 @@ export async function getTravels(app: FastifyInstance) {
     .withTypeProvider<ZodTypeProvider>()
     .get('/travels', {
       schema: {
-        summary: 'Lista as manutenções',
-        tags: ['manutenção'],
+        summary: 'Lista os transportes',
+        tags: ['transporte'],
         response: {
           200: z.object({
             travels: z.array(z.object({

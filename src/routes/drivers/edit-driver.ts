@@ -9,7 +9,7 @@ export async function editDriver(app: FastifyInstance) {
     .put('/drivers/:driverId', {
       schema: {
         summary: 'Edita um motorista',
-        tags: ['motoristas'],
+        tags: ['motorista'],
         params: z.object({
            driverId: z.coerce.number() 
         }),

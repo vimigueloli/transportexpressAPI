@@ -8,8 +8,8 @@ export async function getTravel(app: FastifyInstance) {
     .withTypeProvider<ZodTypeProvider>()
     .get('/travels/:travelId', {
       schema: {
-        summary: 'Exibe uma manutenção',
-        tags: ['manutenção'],
+        summary: 'Exibe um transporte',
+        tags: ['transporte'],
         params: z.object({
            travelId: z.coerce.number() 
         }),
