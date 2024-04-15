@@ -3,21 +3,21 @@ import { z } from "zod"
 import { prisma } from "../../lib/prisma"
 import { FastifyInstance } from "fastify"
 
-export async function getRefuelling(app: FastifyInstance) {
+export async function getMaintenance(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .get('/refuellings/:refuellingId', {
+    .get('/maintenances/:maintenanceId', {
       schema: {
-        summary: 'Exibe um abastecimento',
-        tags: ['abastecimento'],
+        summary: 'Exibe uma manutenção',
+        tags: ['manutenção'],
         params: z.object({
-           refuellingId: z.coerce.number() 
+           maintenanceId: z.coerce.number() 
         }),
         response: {
           200: z.object({
-            liters: z.number(),
+            commission: z.number(),
             cost: z.number(),
-            date: z.date(),
+            obs: z.string(),
             driver: z.object({
               name: z.string(),
               id: z.number()
@@ -32,22 +32,22 @@ export async function getRefuelling(app: FastifyInstance) {
       },
     }, async (request, reply) => {
 
-        const {refuellingId} = request.params
+        const {maintenanceId} = request.params
 
-        const refuelling = await prisma.refuelling.findUnique({
+        const maintenance = await prisma.maintenance.findUnique({
             where:{
-                id: refuellingId
+                id: maintenanceId
             }
         })
 
-        if(refuelling=== null || refuelling === undefined){
-          throw new Error("Abastecimento não localizado")
+        if(maintenance=== null || maintenance === undefined){
+          throw new Error("Manutenção não localizada")
         } else{
           return reply.status(200).send({
-            id: refuelling.id,
-            liters: Number(refuelling.liters),
-            cost: Number(refuelling.cost),
-            date: refuelling.date,
+            id: maintenance.id,
+            commission: Number(maintenance.commission),
+            cost: Number(maintenance.cost),
+            obs: maintenance.obs,
             truck:{
               plate: '',
               id: 0

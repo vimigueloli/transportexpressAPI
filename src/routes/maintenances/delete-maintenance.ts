@@ -3,15 +3,15 @@ import { z } from "zod"
 import { prisma } from "../../lib/prisma"
 import { FastifyInstance } from "fastify"
 
-export async function deleteRefuelling(app: FastifyInstance) {
+export async function deleteMaintenance(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .delete('/refuellings/:refuellingId', {
+    .delete('/maintenances/:maintenanceId', {
       schema: {
-        summary: 'Deleta um abastecimento',
-        tags: ['abastecimento'],
+        summary: 'Deleta uma manutenção',
+        tags: ['manutenção'],
         params: z.object({
-           refuellingId: z.coerce.number() 
+           maintenanceId: z.coerce.number() 
         }),
         response: {
           200: z.object({
@@ -21,15 +21,15 @@ export async function deleteRefuelling(app: FastifyInstance) {
       },
     }, async (request, reply) => {
 
-        const {refuellingId} = request.params
+        const {maintenanceId} = request.params
 
-        await prisma.refuelling.delete({
+        await prisma.maintenance.delete({
             where:{
-                id:refuellingId
+                id:maintenanceId
             }
         })
 
-      return reply.status(200).send({ message: 'abastecimento deletado com sucesso!' })
+      return reply.status(200).send({ message: 'manutenção deletada com sucesso!' })
     })
 }
 

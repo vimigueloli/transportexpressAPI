@@ -3,19 +3,19 @@ import { z } from "zod"
 import { prisma } from "../../lib/prisma"
 import { FastifyInstance } from "fastify"
 
-export async function getRefuellings(app: FastifyInstance) {
+export async function getMaintenances(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .get('/refuellings', {
+    .get('/maintenances', {
       schema: {
-        summary: 'Lista os abastecimentos',
-        tags: ['abastecimento'],
+        summary: 'Lista as manutenções',
+        tags: ['manutenção'],
         response: {
           200: z.object({
-            refuellings: z.array(z.object({
-              liters: z.number(),
+            maintenances: z.array(z.object({
+              commission: z.number(),
               cost: z.number(),
-              date: z.date(),
+              obs: z.string(),
               driver: z.object({
                 name: z.string(),
                 id: z.number()
@@ -30,8 +30,8 @@ export async function getRefuellings(app: FastifyInstance) {
         },
       },
     }, async (request, reply) => {
-      const refuellings:any = await prisma.refuelling.findMany()
-      return reply.status(201).send({refuellings:refuellings})
+      const maintenances:any = await prisma.maintenance.findMany()
+      return reply.status(201).send({maintenances:maintenances})
     })
 }
 

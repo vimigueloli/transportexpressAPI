@@ -19,6 +19,16 @@ import { deleteTruck } from "./routes/trucks/delete-trucks";
 import { editTruck } from "./routes/trucks/edit-trucks";
 import { getTrucks } from "./routes/trucks/get-trucks";
 import { getTruck } from "./routes/trucks/get-truck";
+import { createMaintenance } from "./routes/maintenances/post-maintenance";
+import { deleteMaintenance } from "./routes/maintenances/delete-maintenance";
+import { editMaintenance } from "./routes/maintenances/edit-maintenance";
+import { getMaintenance } from "./routes/maintenances/get-maintenance";
+import { getMaintenances } from "./routes/maintenances/get-maintenances";
+import { deleteRefuelling } from "./routes/refuellings/delete-refuelling";
+import { createRefuelling } from "./routes/refuellings/post-refuelling";
+import { editRefuelling } from "./routes/refuellings/edit-refuelling";
+import { getRefuelling } from "./routes/refuellings/get-refuelling";
+import { getRefuellings } from "./routes/refuellings/get-refuellings";
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -73,6 +83,20 @@ app.register(deletePath)
 app.register(editPath)
 app.register(getPath)
 app.register(getPaths)
+
+// * maintenance routes * //
+app.register(createMaintenance)
+app.register(deleteMaintenance)
+app.register(editMaintenance)
+app.register(getMaintenance)
+app.register(getMaintenances)
+
+// * refuelling routes * //
+app.register(createRefuelling)
+app.register(deleteRefuelling)
+app.register(editRefuelling)
+app.register(getRefuelling)
+app.register(getRefuellings)
 
 
 app.listen({ port: 3333, host: '0.0.0.0' }).then(() => {

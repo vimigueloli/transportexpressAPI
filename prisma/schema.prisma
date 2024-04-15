@@ -59,8 +59,10 @@ model Route {
 }
 
 model Maintenance {
-  id  Int    @id @default(autoincrement())
-  obs String
+  id         Int     @id @default(autoincrement())
+  obs        String
+  cost       Decimal
+  commission Decimal
 
   truck    Truck  @relation(fields: [truckId], references: [id])
   truckId  Int    @map("truck_id")

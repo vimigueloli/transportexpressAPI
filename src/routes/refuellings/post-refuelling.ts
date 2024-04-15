@@ -3,7 +3,7 @@ import { z } from "zod"
 import { prisma } from "../../lib/prisma"
 import { FastifyInstance } from "fastify"
 
-export async function createPath(app: FastifyInstance) {
+export async function createRefuelling(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .post('/refuellings', {
