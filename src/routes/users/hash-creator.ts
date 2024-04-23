@@ -4,14 +4,13 @@ import { prisma } from "../../lib/prisma"
 import bcrypt from 'bcrypt'
 import { FastifyInstance } from "fastify"
 
-export async function createHash(app: FastifyInstance) {
+export default async function createHash(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .post('/trucks', {
+    .post('/hash', {
       schema: {
         summary: 'transforma uma senha em hash',
         tags: ['usuário'],
-        security: [{ apiKey: [] }],
         body: z.object({
           password: z.string(),
         }),

@@ -34,6 +34,8 @@ import { getTravels } from "./routes/travels/get-travels";
 import { deleteTravel } from "./routes/travels/delete-travel";
 import { editTravel } from "./routes/travels/edit-travel";
 import { getTravel } from "./routes/travels/get-travel";
+import createHash from "./routes/users/hash-creator";
+import login from "./routes/users/login";
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -110,6 +112,9 @@ app.register(editTravel)
 app.register(getTravel)
 app.register(getTravels)
 
+// * user routes * //
+app.register(createHash)
+app.register(login)
 
 
 app.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
