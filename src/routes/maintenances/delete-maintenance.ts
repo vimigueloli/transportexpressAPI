@@ -2,6 +2,7 @@ import { ZodTypeProvider } from "fastify-type-provider-zod"
 import { z } from "zod"
 import { prisma } from "../../lib/prisma"
 import { FastifyInstance } from "fastify"
+import authChecker from "../../helpers/authChecker"
 
 export async function deleteMaintenance(app: FastifyInstance) {
   app
@@ -18,10 +19,15 @@ export async function deleteMaintenance(app: FastifyInstance) {
             message: z.string(),
           })
         },
+        headers: z.object({
+          authorization: z.string()
+        }),
       },
+      preHandler: [authChecker]
     }, async (request, reply) => {
 
-        const {maintenanceId} = request.params
+        const params:any = request.params
+        const {maintenanceId} = params
 
         await prisma.maintenance.delete({
             where:{

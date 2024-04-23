@@ -2,6 +2,7 @@ import { ZodTypeProvider } from "fastify-type-provider-zod"
 import { z } from "zod"
 import { prisma } from "../../lib/prisma"
 import { FastifyInstance } from "fastify"
+import authChecker from "../../helpers/authChecker"
 
 export async function getTrucks(app: FastifyInstance) {
   app
@@ -19,7 +20,11 @@ export async function getTrucks(app: FastifyInstance) {
             })),
           })
         },
+        headers: z.object({
+          authorization: z.string()
+        }),
       },
+      preHandler: [authChecker]
     }, async (request, reply) => {
 
 

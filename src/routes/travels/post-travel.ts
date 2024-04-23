@@ -2,6 +2,7 @@ import { ZodTypeProvider } from "fastify-type-provider-zod"
 import { z } from "zod"
 import { prisma } from "../../lib/prisma"
 import { FastifyInstance } from "fastify"
+import authChecker from "../../helpers/authChecker"
 
 export async function createTravel(app: FastifyInstance) {
   app
@@ -26,8 +27,13 @@ export async function createTravel(app: FastifyInstance) {
             maintenanceId: z.number(),
           })
         },
+        headers: z.object({
+          authorization: z.string()
+        }),
       },
+      preHandler: [authChecker]
     }, async (request, reply) => {
+      const body:any = request.body
       const {
         urban,
         number,
@@ -38,7 +44,7 @@ export async function createTravel(app: FastifyInstance) {
         toll_prize,
         driver_id,
         truck_plate,
-      } = request.body
+      } = body
 
       const maintenance = await prisma.travel.create({
         data: {

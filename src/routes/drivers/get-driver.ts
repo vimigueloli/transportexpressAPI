@@ -2,6 +2,7 @@ import { ZodTypeProvider } from "fastify-type-provider-zod"
 import { z } from "zod"
 import { prisma } from "../../lib/prisma"
 import { FastifyInstance } from "fastify"
+import authChecker from "../../helpers/authChecker"
 
 export async function getDriver(app: FastifyInstance) {
   app
@@ -20,10 +21,15 @@ export async function getDriver(app: FastifyInstance) {
             id: z.number()
           })
         },
+        headers: z.object({
+          authorization: z.string()
+        }),
       },
+      preHandler: [authChecker]
     }, async (request, reply) => {
 
-        const {driverId} = request.params
+        const params:any = request.params
+        const {driverId} = params
 
         const driver = await prisma.driver.findUnique({
             where:{

@@ -2,6 +2,7 @@ import { ZodTypeProvider } from "fastify-type-provider-zod"
 import { number, z } from "zod"
 import { prisma } from "../../lib/prisma"
 import { FastifyInstance } from "fastify"
+import authChecker from "../../helpers/authChecker"
 
 export async function editTravel(app: FastifyInstance) {
   app
@@ -27,19 +28,17 @@ export async function editTravel(app: FastifyInstance) {
             message: z.string(),
           })
         },
+        headers: z.object({
+          authorization: z.string()
+        }),
       },
+      preHandler: [authChecker]
     }, async (request, reply) => {
 
-        const {travelId} = request.params
-        const {
-          urban,
-          number,
-          date,
-          prize,
-          commission,
-          client,
-          toll_prize
-        } = request.body
+        const params:any = request.params
+        const travelId = params.travelId
+        const body:any = request.body
+        const {urban, number, date, prize, commission, client, toll_prize} = body
 
         await prisma.travel.update({
           where:{

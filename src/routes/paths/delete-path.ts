@@ -2,6 +2,7 @@ import { ZodTypeProvider } from "fastify-type-provider-zod"
 import { z } from "zod"
 import { prisma } from "../../lib/prisma"
 import { FastifyInstance } from "fastify"
+import authChecker from "../../helpers/authChecker"
 
 export async function deletePath(app: FastifyInstance) {
   app
@@ -18,10 +19,15 @@ export async function deletePath(app: FastifyInstance) {
             message: z.string(),
           })
         },
+        headers: z.object({
+          authorization: z.string()
+        }),
       },
+      preHandler: [authChecker]
     }, async (request, reply) => {
 
-        const {pathId} = request.params
+        const params:any = request.params
+        const {pathId} = params
 
         await prisma.route.delete({
             where:{

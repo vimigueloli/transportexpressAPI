@@ -2,6 +2,7 @@ import { ZodTypeProvider } from "fastify-type-provider-zod"
 import { z } from "zod"
 import { prisma } from "../../lib/prisma"
 import { FastifyInstance } from "fastify"
+import authChecker from "../../helpers/authChecker"
 
 export async function getMaintenance(app: FastifyInstance) {
   app
@@ -29,14 +30,38 @@ export async function getMaintenance(app: FastifyInstance) {
             id: z.number()
           })
         },
+        headers: z.object({
+          authorization: z.string()
+        }),
       },
+      preHandler: [authChecker]
     }, async (request, reply) => {
 
-        const {maintenanceId} = request.params
+        const params:any = request.params
+        const {maintenanceId} = params
 
         const maintenance = await prisma.maintenance.findUnique({
             where:{
                 id: maintenanceId
+            },
+            select:{
+              id:true,
+              commission:true,
+              cost:true,
+              obs: true,
+              date:true,
+              driver:{
+                select:{
+                  id:true,
+                  name:true
+                }
+              },
+              truck:{
+                select:{
+                  id:true,
+                  plate: true
+                }
+              }
             }
         })
 

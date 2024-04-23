@@ -2,6 +2,7 @@ import { ZodTypeProvider } from "fastify-type-provider-zod"
 import { z } from "zod"
 import { prisma } from "../../lib/prisma"
 import { FastifyInstance } from "fastify"
+import authChecker from "../../helpers/authChecker"
 
 export async function editPath(app: FastifyInstance) {
   app
@@ -23,11 +24,17 @@ export async function editPath(app: FastifyInstance) {
             message: z.string(),
           })
         },
+        headers: z.object({
+          authorization: z.string()
+        }),
       },
+      preHandler: [authChecker]
     }, async (request, reply) => {
 
-        const {pathId} = request.params
-        const {origin, suggested_price, destination} = request.body
+        const params:any = request.params
+        const {pathId} = params
+        const body:any = request.body
+        const {origin, suggested_price, destination} = body
 
         await prisma.route.update({
           where:{

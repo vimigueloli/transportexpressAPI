@@ -2,6 +2,7 @@ import { ZodTypeProvider } from "fastify-type-provider-zod"
 import { z } from "zod"
 import { prisma } from "../../lib/prisma"
 import { FastifyInstance } from "fastify"
+import authChecker from "../../helpers/authChecker"
 
 export async function getTravels(app: FastifyInstance) {
   app
@@ -32,10 +33,35 @@ export async function getTravels(app: FastifyInstance) {
             })),
           })
         },
+        headers: z.object({
+          authorization: z.string()
+        }),
       },
+      preHandler:[authChecker]
     }, async (request, reply) => {
-      const travels:any = await prisma.travel.findMany()
-      return reply.status(201).send({travels:travels})
+      const travels = await prisma.travel.findMany({
+        select:{
+          id:true,
+          urban: true,
+          number: true,
+          date: true,
+          prize: true,
+          commission: true,
+          client: true,
+          tollPrize: true,
+          driver:{select: {
+            name: true,
+            id:true
+          }},
+          truck:{
+            select:{
+              plate:true,
+              id: true,
+            }
+          }
+        }
+      })
+      return reply.status(201).send({travels:travels.map((item:any)=>({...item, tollPrize: undefined, toll_prize:item.tollPrize}))})
     })
 }
 

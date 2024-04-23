@@ -2,6 +2,7 @@ import { ZodTypeProvider } from "fastify-type-provider-zod"
 import { z } from "zod"
 import { prisma } from "../../lib/prisma"
 import { FastifyInstance } from "fastify"
+import authChecker from "../../helpers/authChecker"
 
 export async function getTravel(app: FastifyInstance) {
   app
@@ -33,14 +34,37 @@ export async function getTravel(app: FastifyInstance) {
             }),
           })
         },
+        headers: z.object({
+          authorization: z.string()
+        }),
       },
+      preHandler: [ authChecker]
     }, async (request, reply) => {
 
-        const {travelId} = request.params
+        const params:any = request.params
+        const {travelId} = params
 
         const travel = await prisma.travel.findUnique({
             where:{
                 id: travelId
+            },
+            select:{
+              id: true,
+              commission: true,
+              urban: true,
+              number: true,
+              date: true,
+              prize: true,
+              client: true,
+              tollPrize: true,
+              truck:{select:{
+                plate: true,
+                id: true
+              }},
+              driver:{select:{
+                name: true,
+                id: true
+              }}
             }
         })
 
@@ -56,14 +80,8 @@ export async function getTravel(app: FastifyInstance) {
             prize: Number(travel.prize),
             client: travel.client || '',
             toll_prize: Number(travel.tollPrize),
-            truck:{
-              plate: '',
-              id: 0
-            },
-            driver:{
-              name: '',
-              id: 0
-            }
+            truck:travel.truck,
+            driver:travel.driver
           })
         }
 

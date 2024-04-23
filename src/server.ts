@@ -111,6 +111,7 @@ app.register(getTravel)
 app.register(getTravels)
 
 
+
 app.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
   console.log('Servidor Online 🌐 ✅')
 })
