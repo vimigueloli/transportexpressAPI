@@ -3,6 +3,7 @@ import { z } from "zod"
 import { prisma } from "../../lib/prisma"
 import { FastifyInstance } from "fastify"
 import authChecker from "../../helpers/authChecker"
+import monthIntervalCalculator from "../../helpers/monthIntervalCalculator"
 
 export async function getTravels(app: FastifyInstance) {
   app
@@ -11,6 +12,11 @@ export async function getTravels(app: FastifyInstance) {
       schema: {
         summary: 'Lista os transportes',
         tags: ['transporte'],
+        querystring: z.object({
+          page: z.number().nullish(),
+          month: z.number().nullish(),
+          year: z.number().nullish()
+        }),
         response: {
           200: z.object({
             travels: z.array(z.object({
@@ -39,7 +45,25 @@ export async function getTravels(app: FastifyInstance) {
       },
       preHandler:[authChecker]
     }, async (request, reply) => {
+      const {page, month, year}:any = request.query
+      
+      
+      const {start, end} = monthIntervalCalculator(month,year)
+
       const travels = await prisma.travel.findMany({
+        orderBy:[
+          {
+            date: 'desc'
+          }
+        ],
+        where:(!month && !year)?undefined:{
+          date:{
+            lte: end,
+            gte: start
+          }
+        }, 
+        take: page? 10 : undefined,
+        skip: page? 10*page : undefined,
         select:{
           id:true,
           urban: true,

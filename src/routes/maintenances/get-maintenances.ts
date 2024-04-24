@@ -3,6 +3,7 @@ import { z } from "zod"
 import { prisma } from "../../lib/prisma"
 import { FastifyInstance } from "fastify"
 import authChecker from "../../helpers/authChecker"
+import monthIntervalCalculator from "../../helpers/monthIntervalCalculator"
 
 export async function getMaintenances(app: FastifyInstance) {
   app
@@ -11,6 +12,11 @@ export async function getMaintenances(app: FastifyInstance) {
       schema: {
         summary: 'Lista as manutenções',
         tags: ['manutenção'],
+        querystring: z.object({
+          month: z.number().nullish(),
+          year: z.number().nullish(),
+          page: z.number().nullish()
+        }),
         response: {
           200: z.object({
             maintenances: z.array(z.object({
@@ -35,7 +41,25 @@ export async function getMaintenances(app: FastifyInstance) {
       },
       preHandler: [authChecker]
     }, async (request, reply) => {
+
+      const {month, year, page}:any = request.query
+
+      const {start, end } = monthIntervalCalculator(month,year)
+
       const maintenances:any = await prisma.maintenance.findMany({
+        orderBy:[
+          {
+            date: 'desc'
+          }
+        ],
+        where:(!month && !year)?undefined:{
+          date:{
+            lte: end,
+            gte: start
+          }
+        }, 
+        take: page? 10 : undefined,
+        skip: page? 10*page : undefined,
         select:{
           id:true,
           commission:true,

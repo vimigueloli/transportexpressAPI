@@ -28,6 +28,7 @@
     "fastify": "^4.26.2",
     "fastify-type-provider-zod": "^1.1.9",
     "jsonwebtoken": "^9.0.2",
+    "moment": "^2.30.1",
     "zod": "^3.22.4"
   }
 }
