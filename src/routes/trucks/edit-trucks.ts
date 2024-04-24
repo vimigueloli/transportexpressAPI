@@ -32,8 +32,30 @@ export async function editTruck(app: FastifyInstance) {
 
         const params:any = request.params
         const {truckId} = params
+
+        if(isNaN(truckId)){
+          reply.status(406)
+          throw new Error("O ID do caminhão deve ser um número")
+        }
+
+        const truck = await prisma.truck.findUnique({
+          where:{
+            id: truckId
+          }
+        })
+
+        if(!truck){
+          reply.status(404)
+          throw new Error("Caminhão não localizado")
+        }
+
         const body:any = request.body
         const {plate, renavan} = body
+
+        if(plate.length < 8){
+          reply.status(406)
+          throw new Error("A placa do caminhão deve conter 8caracteres contando com o caracter especial")
+        }
 
         await prisma.truck.update({
             where:{

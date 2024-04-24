@@ -40,31 +40,36 @@ export async function getRefuelling(app: FastifyInstance) {
         const params:any = request.params
         const {refuellingId} = params
 
+        if(isNaN(refuellingId)){
+          reply.status(406)
+          throw new Error("O ID do abastecimento deve ser um número")
+        }
+
         const refuelling = await prisma.refuelling.findUnique({
             where:{
                 id: refuellingId
             },
             select:{
               id:true,
-          liters: true,
-          cost:true,
-          date: true,
-          driver:{
-            select:{
-              id:true,
-              name:true
-            }
-          },
-          truck:{
-            select:{
-              id:true,
-              plate: true
-            }
-          }
+              liters: true,
+              cost:true,
+              date: true,
+              driver:{
+                select:{
+                  id:true,
+                  name:true
+                }
+              },
+              truck:{
+                select:{
+                  id:true,
+                  plate: true
+                }
+              }
             }
         })
 
-        if(refuelling=== null || refuelling === undefined){
+        if(!refuelling){
           throw new Error("Abastecimento não localizado")
         } else{
           return reply.status(200).send({

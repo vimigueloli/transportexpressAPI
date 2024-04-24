@@ -30,6 +30,16 @@ export async function createDriver(app: FastifyInstance) {
 
       const {name,cpf}= body
 
+      if(!name || name.length < 3){
+        reply.status(406)
+        throw new Error("O nome deve conter no minimo 3 caracteres")
+      }
+
+      if(!cpf || cpf.length < 14){
+        reply.status(406)
+        throw new Error("O CPF deve conter 14 caracteres contando os caracteres especiais")
+      }
+
       const driver = await prisma.driver.create({
         data: {
           name,

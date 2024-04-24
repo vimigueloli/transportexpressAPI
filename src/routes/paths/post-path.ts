@@ -30,6 +30,11 @@ export async function createPath(app: FastifyInstance) {
       const body:any = request.body
       const {origin, destination, suggested_price} = body
 
+      if(!origin || !suggested_price || isNaN(suggested_price) || !destination){
+        reply.status(406)
+        throw new Error("Envie os campos corretamente")
+      }
+
       const path = await prisma.route.create({
         data: {
           origin,

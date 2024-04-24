@@ -31,13 +31,19 @@ export async function getDriver(app: FastifyInstance) {
         const params:any = request.params
         const {driverId} = params
 
+        if(isNaN(driverId)){
+          reply.status(404)
+          throw new Error("O ID do motorista deve ser um número")
+        }
+
         const driver = await prisma.driver.findUnique({
             where:{
                 id: driverId
             }
         })
 
-        if(driver=== null || driver === undefined){
+        if(!driver){
+          reply.status(404)
           throw new Error("Motorista não localizado")
         } else{
           return reply.status(201).send({

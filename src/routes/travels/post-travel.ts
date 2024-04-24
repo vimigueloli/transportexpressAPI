@@ -46,6 +46,11 @@ export async function createTravel(app: FastifyInstance) {
         truck_plate,
       } = body
 
+      if(!number || !date || isNaN(prize) || isNaN(commission) || !client || isNaN(toll_prize)){
+        reply.status(406)
+        throw new Error("Envie os campos corretamente")
+      }
+
       const maintenance = await prisma.travel.create({
         data: {
           urban,

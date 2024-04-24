@@ -32,13 +32,19 @@ export async function getPath(app: FastifyInstance) {
         const params:any = request.params
         const {pathId} = params
 
+        if(isNaN(pathId)){
+          reply.status(406)
+          throw new Error("O ID do trecho deve ser um número")
+        }
+
         const path = await prisma.route.findUnique({
             where:{
                 id: pathId
             }
         })
 
-        if(path=== null || path === undefined){
+        if(!path){
+          reply.status(404)
           throw new Error("trecho não localizado")
         } else{
           return reply.status(200).send({

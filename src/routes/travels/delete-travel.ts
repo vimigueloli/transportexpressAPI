@@ -28,6 +28,23 @@ export async function deleteTravel(app: FastifyInstance) {
 
         const params:any = request.params
         const {travelId} = params
+
+        if(isNaN(travelId)){
+          reply.status(406)
+          throw new Error("O ID da viagem deve ser um número")
+        }
+
+        const travel = await prisma.travel.findUnique({
+          where:{
+            id:travelId
+          }
+        })
+
+        if(!travel){
+          reply.status(404)
+          throw new Error("Viagem não localizada")
+        }
+
         await prisma.travel.delete({
             where:{
                 id:travelId

@@ -33,8 +33,30 @@ export async function editPath(app: FastifyInstance) {
 
         const params:any = request.params
         const {pathId} = params
+
+        if(isNaN(pathId)){
+          reply.status(406)
+          throw new Error("O ID do trecho deve ser um número")
+        }
+
+        const path = await prisma.route.findUnique({
+          where:{
+            id:pathId
+          }
+        })
+
+        if(!path){
+          reply.status(404)
+          throw new Error("Trecho não localizado")
+        }
+
         const body:any = request.body
         const {origin, suggested_price, destination} = body
+
+        if(!origin || !suggested_price || isNaN(suggested_price) || !destination){
+          reply.status(406)
+          throw new Error("Envie os campos corretamente")
+        }
 
         await prisma.route.update({
           where:{
@@ -47,7 +69,7 @@ export async function editPath(app: FastifyInstance) {
           }
         })
 
-      return reply.status(200).send({ message: 'trecho editado com sucesso!' })
+      return reply.status(200).send({ message: 'Trecho editado com sucesso!' })
     })
 }
 

@@ -37,15 +37,37 @@ export async function editTravel(app: FastifyInstance) {
 
         const params:any = request.params
         const travelId = params.travelId
+
+        if(isNaN(travelId)){
+          reply.status(406)
+          throw new Error("O ID da viagem deve ser um número")
+        }
+
+        const travel = await prisma.travel.findUnique({
+          where:{
+            id:travelId
+          }
+        })
+
+        if(!travel){
+          reply.status(404)
+          throw new Error("Viagem não localizada")
+        }
+
         const body:any = request.body
         const {urban, number, date, prize, commission, client, toll_prize} = body
+
+        if(!number || !date || isNaN(prize) || isNaN(commission) || !client || isNaN(toll_prize)){
+          reply.status(406)
+          throw new Error("Envie os campos corretamente")
+        }
 
         await prisma.travel.update({
           where:{
             id: travelId
           },
           data:{
-            urban,
+            urban: urban? true : false,
             number,
             date,
             prize,

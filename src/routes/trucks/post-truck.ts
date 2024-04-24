@@ -32,6 +32,11 @@ export async function createTruck(app: FastifyInstance) {
         renavan,
       } = body
 
+      if(plate.length < 8){
+        reply.status(406)
+        throw new Error("A placa do caminhão deve conter 8caracteres contando com o caracter especial")
+      }
+
       const truck = await prisma.truck.create({
         data: {
           plate,

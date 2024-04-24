@@ -34,8 +34,32 @@ export async function editMaintenance(app: FastifyInstance) {
 
         const params:any = request.params
         const {maintenanceId} = params
+
+        if(isNaN(maintenanceId)){
+          reply.status(406)
+          throw new Error("O ID da manutenção deve ser um número")
+        }
+
+        const maintanance = await prisma.maintenance.findUnique({
+          where:{
+            id: maintenanceId
+          }
+        })
+
+        if(!maintanance){
+          reply.status(404)
+          throw new Error("Manutenção não localizada")
+        }
+
+
         const body:any = request.body
         const {obs , cost, commission, date} = body
+
+        if(obs.length < 6 || !cost || isNaN(cost) || !commission || isNaN(commission) || !date){
+          reply.status(406)
+          throw new Error("Envie os campos corretamente")
+        }
+
 
         await prisma.maintenance.update({
           where:{
@@ -49,7 +73,7 @@ export async function editMaintenance(app: FastifyInstance) {
           }
         })
 
-      return reply.status(200).send({ message: 'manuteção editada com sucesso!' })
+      return reply.status(200).send({ message: 'Manuteção editada com sucesso!' })
     })
 }
 

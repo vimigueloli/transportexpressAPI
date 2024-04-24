@@ -29,6 +29,22 @@ export async function deleteMaintenance(app: FastifyInstance) {
         const params:any = request.params
         const {maintenanceId} = params
 
+        if(isNaN(maintenanceId)){
+          reply.status(406)
+          throw new Error("O ID da manutenção deve ser um número")
+        }
+
+        const maintanance = await prisma.maintenance.findUnique({
+          where:{
+            id: maintenanceId
+          }
+        })
+
+        if(!maintanance){
+          reply.status(404)
+          throw new Error("Manutenção não localizada")
+        }
+
         await prisma.maintenance.delete({
             where:{
                 id:maintenanceId

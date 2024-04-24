@@ -29,6 +29,22 @@ export async function deleteRefuelling(app: FastifyInstance) {
         const params:any = request.params
         const {refuellingId} = params
 
+        if(isNaN(refuellingId)){
+          reply.status(406)
+          throw new Error("O ID do abastecimento deve ser um número")
+        }
+
+        const refuelling = await prisma.refuelling.findUnique({
+          where:{
+            id:refuellingId
+          }
+        })
+
+        if(!refuelling){
+          reply.status(404)
+          throw new Error("Abastecimento não localizado")
+        }
+
         await prisma.refuelling.delete({
             where:{
                 id:refuellingId

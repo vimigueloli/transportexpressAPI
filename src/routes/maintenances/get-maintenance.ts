@@ -40,6 +40,11 @@ export async function getMaintenance(app: FastifyInstance) {
         const params:any = request.params
         const {maintenanceId} = params
 
+        if(isNaN(maintenanceId)){
+          reply.status(406)
+          throw new Error("O ID da manutenção deve ser um número")
+        }
+
         const maintenance = await prisma.maintenance.findUnique({
             where:{
                 id: maintenanceId
@@ -65,7 +70,8 @@ export async function getMaintenance(app: FastifyInstance) {
             }
         })
 
-        if(maintenance=== null || maintenance === undefined){
+        if(!maintenance){
+          reply.status(404)
           throw new Error("Manutenção não localizada")
         } else{
           return reply.status(200).send({

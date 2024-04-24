@@ -29,13 +29,29 @@ export async function deletePath(app: FastifyInstance) {
         const params:any = request.params
         const {pathId} = params
 
+        if(isNaN(pathId)){
+          reply.status(406)
+          throw new Error("O ID do trecho deve ser um número")
+        }
+
+        const path = await prisma.route.findUnique({
+          where:{
+            id:pathId
+          }
+        })
+
+        if(!path){
+          reply.status(404)
+          throw new Error("Trecho não localizado")
+        }
+
         await prisma.route.delete({
             where:{
                 id:pathId
             }
         })
 
-      return reply.status(200).send({ message: 'Motorista deletado com sucesso!' })
+      return reply.status(200).send({ message: 'Trecho deletado com sucesso!' })
     })
 }
 

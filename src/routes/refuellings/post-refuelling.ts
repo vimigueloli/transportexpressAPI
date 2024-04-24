@@ -33,6 +33,11 @@ export async function createRefuelling(app: FastifyInstance) {
 
       const {liters, cost, date, driver_id, truck_id} = body
 
+      if(isNaN(liters) || isNaN(cost) || !date || isNaN(truck_id) || isNaN(driver_id)){
+          reply.status(406)
+          throw new Error("Envie os campos corretamente")
+        }
+
       const refuelling = await prisma.refuelling.create({
         data: {
           liters,

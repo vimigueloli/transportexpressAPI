@@ -31,6 +31,22 @@ export async function deleteTruck(app: FastifyInstance) {
         const params:any = request.params
         const {truckId} = params
 
+        if(isNaN(truckId)){
+          reply.status(406)
+          throw new Error("O ID do caminhão deve ser um número")
+        }
+
+        const truck = await prisma.truck.findUnique({
+          where:{
+            id: truckId
+          }
+        })
+
+        if(!truck){
+          reply.status(404)
+          throw new Error("Caminhão não localizado")
+        }
+
         await prisma.truck.delete({
             where:{
                 id:truckId

@@ -44,6 +44,11 @@ export async function getTravel(app: FastifyInstance) {
         const params:any = request.params
         const {travelId} = params
 
+        if(isNaN(travelId)){
+          reply.status(406)
+          throw new Error("O ID da viagem deve ser um número")
+        }
+
         const travel = await prisma.travel.findUnique({
             where:{
                 id: travelId
@@ -68,7 +73,7 @@ export async function getTravel(app: FastifyInstance) {
             }
         })
 
-        if(travel=== null || travel === undefined){
+        if(!travel){
           throw new Error("Manutenção não localizada")
         } else{
           return reply.status(200).send({

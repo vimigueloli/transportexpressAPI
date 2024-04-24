@@ -34,6 +34,11 @@ export async function createMaintenance(app: FastifyInstance) {
 
       const {commission, cost, obs, driver_id, truck_id, date} = body
 
+      if(obs.length < 6 || !cost || isNaN(cost) || !commission || isNaN(commission) || !date){
+        reply.status(406)
+        throw new Error("Envie os campos corretamente")
+      }
+
       const maintenance = await prisma.maintenance.create({
         data: {
           commission,

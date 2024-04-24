@@ -29,22 +29,48 @@ export async function editDriver(app: FastifyInstance) {
       },
       preHandler: [authChecker]
     }, async (request, reply) => {
+      const params:any = request.params
+      const driverId = params.driverId
 
-        const params:any = request.params
-        const driverId = params.driverId
+      if(isNaN(driverId)){
+        reply.status(406)
+        throw new Error("O ID do motorista precisa ser um número")
+      }
 
-        const body:any = request.body
-        const {name , cpf} = body
+      const driver = prisma.driver.findUnique({
+        where:{
+          id:driverId
+        }
+      })
 
-        await prisma.driver.update({
-          where:{
-            id: driverId
-          },
-          data:{
-            name: name,
-            cpf: cpf
-          }
-        })
+      if(!driver){
+        reply.status(404)
+        throw new Error("Motorista não localizado")
+      }
+
+
+      const body:any = request.body
+      const {name , cpf} = body
+
+      if(!name || name.lenght < 3){
+        reply.status(406)
+        throw new Error("O nome deve ter no minimo 3 caracteres")
+      }
+
+      if(!cpf || cpf.length < 14){
+        reply.status(406)
+        throw new Error("O CPF deve conter no minimo 14 caracteres")
+      }
+
+      await prisma.driver.update({
+        where:{
+          id: driverId
+        },
+        data:{
+          name: name,
+          cpf: cpf
+        }
+      })
 
       return reply.status(200).send({ message: 'Motorista editado com sucesso!' })
     })

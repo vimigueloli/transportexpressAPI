@@ -17,7 +17,7 @@ export default function authChecker(req: FastifyRequest,res: FastifyReply, next:
     
 
     //todo colocar a secret no .env
-    const data:any = jwt.verify(token,'jwtsecret')
+    const data:any = jwt.verify(token,`${process.env.JWT_SECRET}`)
 
     if(!data){
         res.status(401)

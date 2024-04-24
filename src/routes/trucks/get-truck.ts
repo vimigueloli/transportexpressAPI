@@ -31,13 +31,18 @@ export async function getTruck(app: FastifyInstance) {
         const params:any = request.params
         const {truckId} = params
 
+        if(isNaN(truckId)){
+          reply.status(406)
+          throw new Error("O ID do caminão deve ser um número")
+        }
+
         const truck = await prisma.truck.findUnique({
             where:{
                 id: truckId
             }
         })
 
-        if(truck === null || truck === undefined){
+        if(!truck){
             throw new Error("Caminhão não localizado")
         }else{
             return reply.status(200).send({

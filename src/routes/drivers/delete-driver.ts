@@ -30,6 +30,23 @@ export async function deleteDriver(app: FastifyInstance) {
 
         const {driverId} = params
 
+        if(!driverId || isNaN(driverId)){
+          reply.status(406)
+          throw new Error("O ID do motorista precisa ser um número")
+        }
+
+        const driver = await prisma.driver.findUnique({
+          where:{
+            id: driverId
+          }
+        })
+
+        if(!driver){
+          reply.status(404)
+          throw new Error("Motorista não encontrado")
+        }
+
+
         await prisma.driver.delete({
             where:{
                 id:driverId
