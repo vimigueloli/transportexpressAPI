@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node dist/server.mjs",
     "dev": "tsx watch --env-file .env src/server.ts",
-    "vercel-build": "npx prisma migrate deploy && node dist/server.mjs",
+    "vercel-build": "node dist/server.mjs",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio"
   },
