@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node dist/server.mjs",
     "dev": "tsx watch --env-file .env src/server.ts",
-    "vercel-build": "prisma generate",
+    "vercel-build": "prisma generate && nohup node server.js > prod.log && ps aux | grep node",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio"
   },
