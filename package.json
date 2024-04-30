@@ -4,8 +4,11 @@
   "description": "api para gestão de uma transportadora, mantendo registro dos, caminhões, motoristas e viagens facilitando a geração de relatorios e folhas de pagamento",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch --env-file .env src/server.ts"
+    "start": "node dist/server.mjs",
+    "build": "tsup src --format esm",
+    "dev": "tsx watch --env-file .env src/server.ts",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +16,7 @@
   "devDependencies": {
     "@types/node": "^20.12.7",
     "prisma": "^5.12.1",
+    "tsup": "^8.0.2",
     "tsx": "^4.7.2",
     "typescript": "^5.4.4"
   },
