@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "api para gestão de uma transportadora, mantendo registro dos, caminhões, motoristas e viagens facilitando a geração de relatorios e folhas de pagamento",
   "main": "index.js",
+  "engines":{
+    "node":"14.x"
+  },
   "scripts": {
+    "start": "node dist/server.mjs",
     "dev": "tsx watch --env-file .env src/server.ts",
     "vercel-build": "npx prisma migrate deploy",
     "db:migrate": "prisma migrate dev",
