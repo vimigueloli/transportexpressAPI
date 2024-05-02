@@ -57,7 +57,7 @@ export async function editDriver(app: FastifyInstance) {
         throw new Error("O nome deve ter no minimo 3 caracteres")
       }
 
-      if(!cpf || cpf.length < 14){
+      if(cpf? cpf.length < 14 : false){
         reply.status(406)
         throw new Error("O CPF deve conter no minimo 14 caracteres")
       }
