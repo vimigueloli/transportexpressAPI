@@ -29,7 +29,7 @@ export async function getPaths(app: FastifyInstance) {
     }, async (request, reply) => {
 
       const paths:any = await prisma.route.findMany()
-      return reply.status(201).send({paths:paths})
+      return reply.status(201).send({paths:paths.map((item:any)=>({...item,suggestedPrice:undefined, suggested_price:item.suggestedPrice}))})
     })
 }
 
