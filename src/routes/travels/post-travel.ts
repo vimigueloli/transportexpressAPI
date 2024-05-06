@@ -14,17 +14,17 @@ export async function createTravel(app: FastifyInstance) {
         body: z.object({
             urban: z.boolean(),
             number: z.string(),
-            date: z.date(),
+            date: z.string().datetime(),
             prize: z.number(),
             commission: z.number(),
             client: z.string(),
-            toll_prize: z.number(),
+            toll_prize: z.number().optional(),
             driver_id: z.number(),
             truck_plate: z.string(),
           }),
         response: {
           201: z.object({
-            maintenanceId: z.number(),
+            travelId: z.number(),
           })
         },
         headers: z.object({
@@ -46,26 +46,45 @@ export async function createTravel(app: FastifyInstance) {
         truck_plate,
       } = body
 
-      if(!number || !date || isNaN(prize) || isNaN(commission) || !client || isNaN(toll_prize)){
+      if(!number || !date || isNaN(prize) || isNaN(commission) || !client){
         reply.status(406)
+        console.log('falha')
         throw new Error("Envie os campos corretamente")
       }
 
-      const maintenance = await prisma.travel.create({
-        data: {
+      console.log({
           urban,
           number,
-          date,
+          date: new Date(date),
           prize,
           commission,
           client,
           tollPrize: toll_prize,
           driverId: driver_id,
           truckPlate: truck_plate,
-        },
-      })
+        })
 
-      return reply.status(201).send({ maintenanceId: maintenance.id })
+      let travel 
+      
+      try{
+        travel = await prisma.travel.create({
+          data: {
+            urban,
+            number,
+            date: new Date(date),
+            prize,
+            commission,
+            client,
+            tollPrize: toll_prize,
+            driverId: driver_id,
+            truckPlate: truck_plate,
+          },
+        })
+      }catch(e:any){
+        console.log('Erro ->', e)
+      }
+
+      return reply.status(201).send({ travelId: travel?.id })
     })
 }
 

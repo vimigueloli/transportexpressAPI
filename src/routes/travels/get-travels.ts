@@ -8,14 +8,17 @@ import monthIntervalCalculator from "../../helpers/monthIntervalCalculator"
 export async function getTravels(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .get('/travels', {
+    .get('/drivers-travels/:driverId', {
       schema: {
         summary: 'Lista os transportes',
         tags: ['transporte'],
+        params: z.object({
+           driverId: z.coerce.number() 
+        }),
         querystring: z.object({
           page: z.number().nullish(),
-          month: z.number().nullish(),
-          year: z.number().nullish()
+          month: z.string().nullish(),
+          year: z.string().nullish()
         }),
         response: {
           200: z.object({
@@ -46,21 +49,22 @@ export async function getTravels(app: FastifyInstance) {
       preHandler:[authChecker]
     }, async (request, reply) => {
       const {page, month, year}:any = request.query
+      const {driverId}:any = request.params
       
-      
-      const {start, end} = monthIntervalCalculator(month,year)
+      const {start, end} = monthIntervalCalculator(Number(month),Number(year))
 
       const travels = await prisma.travel.findMany({
         orderBy:[
           {
-            date: 'desc'
+            date: 'asc'
           }
         ],
-        where:(!month && !year)?undefined:{
-          date:{
+        where:{
+          date:(!month && !year)?undefined:{
             lte: end,
             gte: start
-          }
+          },
+          driverId: driverId
         }, 
         take: page? 10 : undefined,
         skip: page? 10*page : undefined,

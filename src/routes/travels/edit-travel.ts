@@ -17,7 +17,7 @@ export async function editTravel(app: FastifyInstance) {
         body: z.object({
           urban: z.boolean(),
           number: z.string(),
-          date: z.date(),
+          date: z.string().datetime(),
           prize: z.number(),
           commission: z.number(),
           client: z.string(),
