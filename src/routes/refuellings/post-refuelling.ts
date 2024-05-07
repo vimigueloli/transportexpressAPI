@@ -14,7 +14,7 @@ export async function createRefuelling(app: FastifyInstance) {
         body: z.object({
               liters: z.number(),
               cost: z.number(),
-              date: z.date(),
+              date: z.string().datetime(),
               driver_id: z.number(),
               truck_id: z.number(),
             }),
@@ -42,7 +42,7 @@ export async function createRefuelling(app: FastifyInstance) {
         data: {
           liters,
           cost,
-          date,
+          date:new Date(date),
           driverId: driver_id,
           truckId: truck_id
         },

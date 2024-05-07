@@ -22,24 +22,7 @@ export async function getTravels(app: FastifyInstance) {
         }),
         response: {
           200: z.object({
-            travels: z.array(z.object({
-              id: z.number(),
-              urban: z.boolean(),
-              number: z.string(),
-              date: z.date(),
-              prize: z.number(),
-              commission: z.number(),
-              client: z.string(),
-              toll_prize: z.number(),
-              driver: z.object({
-                name: z.string(),
-                id: z.number()
-              }),
-              truck:z.object({
-                plate: z.string(),
-                id: z.number()
-              }),
-            })),
+            travels: z.array(z.any()),
           })
         },
         headers: z.object({
@@ -89,7 +72,83 @@ export async function getTravels(app: FastifyInstance) {
           }
         }
       })
-      return reply.status(201).send({travels:travels.map((item:any)=>({...item, tollPrize: undefined, toll_prize:item.tollPrize}))})
+
+      const refuellings = await prisma.refuelling.findMany({
+        orderBy:[
+          {
+            date: 'asc'
+          }
+        ],
+        where:{
+          date:(!month && !year)?undefined:{
+            lte: end,
+            gte: start
+          },
+          driverId: driverId
+        }, 
+        select:{
+          id: true,
+          liters: true,
+          date: true,
+          cost: true,
+          driver:{
+            select:{
+              name: true, 
+              id: true
+            }
+          },
+          truck:{
+            select:{
+              plate: true,
+              id: true
+            }
+          }
+        }
+      })
+
+      const maintenances = await prisma.maintenance.findMany({
+        orderBy:[
+          {
+            date: 'asc'
+          }
+        ],
+        where:{
+          date:(!month && !year)?undefined:{
+            lte: end,
+            gte: start
+          },
+          driverId: driverId
+        }, 
+        select:{
+          id: true,
+          date: true,
+          cost: true,
+          obs: true,
+          commission: true,
+          driver:{
+            select:{
+              name: true, 
+              id: true
+            }
+          },
+          truck:{
+            select:{
+              plate: true,
+              id: true
+            }
+          }
+        }
+      })
+
+      const output =  [
+        ...travels.map((item:any)=>({...item, tollPrize: undefined, toll_prize:item.tollPrize})),
+        ...refuellings,
+        ...maintenances
+      ]
+
+      
+
+      return reply.status(201).send({travels: output.sort((a, b) => a.date - b.date)})
     })
 }
 

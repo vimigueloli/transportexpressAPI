@@ -18,7 +18,7 @@ export async function editMaintenance(app: FastifyInstance) {
           obs: z.string(),
           cost: z.number(),
           commission: z.number(),
-          date: z.date()
+          date: z.string().datetime()
         }),
         response: {
           200: z.object({
@@ -69,7 +69,7 @@ export async function editMaintenance(app: FastifyInstance) {
             obs: obs,
             cost: cost,
             commission: commission,
-            date: date
+            date: new Date(date)
           }
         })
 

@@ -17,7 +17,7 @@ export async function editRefuelling(app: FastifyInstance) {
         body: z.object({
           liters: z.number(),
           cost: z.number(),
-          date: z.date()
+          date: z.string().datetime()
         }),
         response: {
           200: z.object({
@@ -51,7 +51,13 @@ export async function editRefuelling(app: FastifyInstance) {
         }
 
         const body:any = request.body
-        const {liters, cost, date} = body.date
+        const {liters, cost, date} = body
+
+        console.log('dados ->', {
+          liters,
+          cost,
+          date
+        })
 
         if(isNaN(liters) || isNaN(cost) || !date){
           reply.status(406)
@@ -65,7 +71,7 @@ export async function editRefuelling(app: FastifyInstance) {
           data:{
             liters: liters,
             cost: cost,
-            date: date
+            date: new Date(date)
           }
         })
 

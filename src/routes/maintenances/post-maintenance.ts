@@ -17,7 +17,7 @@ export async function createMaintenance(app: FastifyInstance) {
             obs: z.string(),
             driver_id: z.number(),
             truck_id: z.number(),
-            date: z.date()
+            date: z.string().datetime()
           }),
         response: {
           201: z.object({
@@ -46,7 +46,7 @@ export async function createMaintenance(app: FastifyInstance) {
           obs,
           driverId: driver_id,
           truckId: truck_id,
-          date: date
+          date: new Date(date)
         },
       })
 
