@@ -7,8 +7,9 @@
     "node":"20.x"
   },
   "scripts": {
+    "start": "node dist/server.mjs",
+    "build": "tsup src --format esm",
     "dev": "tsx watch --env-file .env src/server.ts",
-    "vercel-build": "prisma generate && node dist/server.mjs",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio"
   },
