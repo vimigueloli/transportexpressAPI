@@ -21,7 +21,7 @@ export async function editTravel(app: FastifyInstance) {
           prize: z.number(),
           commission: z.number(),
           client: z.string(),
-          toll_prize: z.number()
+          toll_prize: z.number().optional()
         }),
         response: {
           200: z.object({
