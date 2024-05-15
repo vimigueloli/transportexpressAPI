@@ -27,7 +27,13 @@ export async function getDrivers(app: FastifyInstance) {
       preHandler: [ authChecker]
     }, async (request, reply) => {
 
-      const drivers:any = await prisma.driver.findMany()
+      const drivers:any = await prisma.driver.findMany({
+        orderBy:[
+          {
+            id: 'desc'
+          }
+        ]
+      })
       return reply.status(201).send({drivers:drivers})
 
     })

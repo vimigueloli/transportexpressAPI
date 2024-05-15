@@ -28,7 +28,13 @@ export async function getPaths(app: FastifyInstance) {
       preHandler: [authChecker]
     }, async (request, reply) => {
 
-      const paths:any = await prisma.route.findMany()
+      const paths:any = await prisma.route.findMany({
+        orderBy:[
+          {
+            id: 'desc'
+          }
+        ]
+      })
       return reply.status(201).send({paths:paths.map((item:any)=>({...item,suggestedPrice:undefined, suggested_price:item.suggestedPrice}))})
     })
 }
