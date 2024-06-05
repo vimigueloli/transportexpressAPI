@@ -21,7 +21,8 @@ export async function editTravel(app: FastifyInstance) {
           prize: z.number(),
           commission: z.number(),
           client: z.string(),
-          toll_prize: z.number().optional()
+          toll_prize: z.number().optional(),
+          truck_plate: z.string().optional(),
         }),
         response: {
           200: z.object({
@@ -55,7 +56,7 @@ export async function editTravel(app: FastifyInstance) {
         }
 
         const body:any = request.body
-        const {urban, number, date, prize, commission, client, toll_prize} = body
+        const {urban, number, date, prize, commission, client, toll_prize, truck_plate} = body
 
         if( !date || isNaN(prize) || isNaN(commission) || !client || isNaN(toll_prize)){
           reply.status(406)
@@ -73,7 +74,8 @@ export async function editTravel(app: FastifyInstance) {
             prize,
             commission: commission,
             client,
-            tollPrize: toll_prize
+            tollPrize: toll_prize,
+            truckPlate: truck_plate
           }
         })
 
