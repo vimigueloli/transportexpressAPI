@@ -16,7 +16,7 @@ export async function editTravel(app: FastifyInstance) {
         }),
         body: z.object({
           urban: z.boolean(),
-          number: z.string(),
+          number: z.string().optional(),
           date: z.string().datetime(),
           prize: z.number(),
           commission: z.number(),
@@ -57,7 +57,7 @@ export async function editTravel(app: FastifyInstance) {
         const body:any = request.body
         const {urban, number, date, prize, commission, client, toll_prize} = body
 
-        if(!number || !date || isNaN(prize) || isNaN(commission) || !client || isNaN(toll_prize)){
+        if( !date || isNaN(prize) || isNaN(commission) || !client || isNaN(toll_prize)){
           reply.status(406)
           throw new Error("Envie os campos corretamente")
         }

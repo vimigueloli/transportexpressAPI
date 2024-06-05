@@ -13,7 +13,7 @@ export async function createTravel(app: FastifyInstance) {
         tags: ['transporte'],
         body: z.object({
             urban: z.boolean(),
-            number: z.string(),
+            number: z.string().optional(),
             date: z.string().datetime(),
             prize: z.number(),
             commission: z.number(),
@@ -46,7 +46,7 @@ export async function createTravel(app: FastifyInstance) {
         truck_plate,
       } = body
 
-      if(!number || !date || isNaN(prize) || isNaN(commission) || !client){
+      if(!date || isNaN(prize) || isNaN(commission) || !client){
         reply.status(406)
         console.log('falha')
         throw new Error("Envie os campos corretamente")

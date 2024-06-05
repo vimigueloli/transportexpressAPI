@@ -90,7 +90,7 @@ model Refuelling {
 model Travel {
   id         Int      @id @default(autoincrement())
   urban      Boolean  @default(false)
-  number     String   @unique
+  number     String?  @unique
   date       DateTime
   prize      Decimal
   commission Decimal
