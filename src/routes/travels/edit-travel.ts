@@ -58,7 +58,7 @@ export async function editTravel(app: FastifyInstance) {
         const body:any = request.body
         const {urban, number, date, prize, commission, client, toll_prize, truck_plate} = body
 
-        if( !date || isNaN(prize) || isNaN(commission) || !client || isNaN(toll_prize)){
+        if( !date || isNaN(prize) || isNaN(commission) || !client ){
           reply.status(406)
           throw new Error("Envie os campos corretamente")
         }
