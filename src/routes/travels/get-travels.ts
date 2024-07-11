@@ -35,6 +35,8 @@ export async function getTravels(app: FastifyInstance) {
       const {driverId}:any = request.params
       
       const {start, end} = monthIntervalCalculator(Number(month),Number(year))
+      console.log('começo -> ', start)
+      console.log('fim -> ', end)
 
       const travels = await prisma.travel.findMany({
         orderBy:[

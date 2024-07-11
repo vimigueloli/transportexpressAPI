@@ -1,6 +1,6 @@
 import {
   monthIntervalCalculator
-} from "../chunk-EWYDLNHP.mjs";
+} from "../chunk-NAT2H4WH.mjs";
 export {
   monthIntervalCalculator as default
 };
